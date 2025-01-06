@@ -9,9 +9,11 @@ class SSHExecutionError(Exception):
 
     pass
 
+
 class DatabaseConnectionError(Exception):
     """Custom exception for database connection errors."""
     pass
+
 
 class DatabaseQueryError(Exception):
     """Custom exception for database query execution errors."""
