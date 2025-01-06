@@ -1,2 +1,67 @@
-pangolin.egg-info
-.idea
+# Python bytecode files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+*.so
+*.dylib
+*.dll
+
+# Distribution/Packaging
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+*.egg-info/
+*.egg
+
+# IDE and editor folders
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Test and coverage reports
+.coverage
+.coverage.*
+nosetests.xml
+pytest.xml
+*.cover
+*.tox/
+*.nox/
+*.coverage
+*.hypothesis/
+
+# mypy
+.mypy_cache/
+
+# PyInstaller
+*.spec
+
+# dotenv
+.env
+.env.*
+
+# Pytest
+.cache/
+
+# Coverage tool
+*.coveragerc
+
+# virtualenv
+# .env and .venv are the most common names for virtualenv folders
+.env/
+.venv/
+
+# Miscellaneous
+*.log
+*.bak
+*.swp
+*.swo
+*.swn

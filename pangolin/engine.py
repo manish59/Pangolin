@@ -19,7 +19,6 @@ class Engine(ABC):
             "connection_retries": PangolinConfig.CONNECTION_RETRIES,
         }
         self.config.update(config)
-        self.config.update(config)
 
         # Logging setup
         self.logger = logging.getLogger(f"{self.__class__.__name__}")

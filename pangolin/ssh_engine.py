@@ -50,14 +50,6 @@ class SSH_Engine(Engine):
 
         # Logging setup
         self.logger = logging.getLogger(f"SSHClient_{hostname}")
-        self.logger.setLevel(
-            logging.DEBUG if self.config["logging_enabled"] else logging.ERROR
-        )
-
-        # Client state
-        self._client = None
-        self._last_command_result = None
-        self._last_error = None
 
     def setup(self):
         """
@@ -98,7 +90,7 @@ class SSH_Engine(Engine):
                         timeout=self.config["timeout"],
                     )
 
-                self._client = client
+                self._connection = client
                 self.logger.info(f"Connected to {self.hostname} successfully.")
                 return
 
@@ -128,13 +120,13 @@ class SSH_Engine(Engine):
         Raises:
             SSHExecutionError: If command execution fails and raise_on_error is True
         """
-        if not self._client:
+        if not self._connection:
             raise SSHConnectionError("Not connected. Use connect() or setup() first.")
 
         self.logger.info(f"Executing command: {command}")
 
         try:
-            stdin, stdout, stderr = self._client.exec_command(command)
+            stdin, stdout, stderr = self._connection.exec_command(command)
 
             # Read outputs
             stdout_output = stdout.read().decode("utf-8").strip()
@@ -147,7 +139,7 @@ class SSH_Engine(Engine):
             self.logger.debug(f"Exit status: {exit_status}")
 
             # Store last command result
-            self._last_command_result = {
+            self._last_query_result = {
                 "stdout": stdout_output,
                 "stderr": stderr_output,
                 "exit_status": exit_status,
@@ -174,8 +166,8 @@ class SSH_Engine(Engine):
         Returns:
             str: stdout of the last command
         """
-        if self._last_command_result:
-            return self._last_command_result["stdout"]
+        if self._last_query_result:
+            return self._last_query_result["stdout"]
         return ""
 
     def error(self):
@@ -191,8 +183,8 @@ class SSH_Engine(Engine):
         """
         Disconnect from the SSH server.
         """
-        if self._client:
-            self._client.close()
+        if self._connection:
+            self._connection.close()
             self.logger.info(f"Disconnected from {self.hostname}")
             self._client = None
 
