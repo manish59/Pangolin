@@ -53,9 +53,6 @@ class Database_Engine(Engine):
 
         # Logging setup
         self.logger = logging.getLogger(f"{self.__class__.__name__}")
-        self.logger.setLevel(
-            logging.DEBUG if self.config["logging_enabled"] else logging.ERROR
-        )
 
         # Connection parameters
         self.database_type = database_type.lower()
@@ -65,13 +62,7 @@ class Database_Engine(Engine):
         self.username = username
         self.password = password
 
-        # SQLAlchemy components
-        self._engine = None
         self._session_factory = None
-
-        # Query state
-        self._last_query_result = None
-        self._last_error = None
 
     def _get_connection_string(self) -> str:
         """
@@ -151,7 +142,7 @@ class Database_Engine(Engine):
             connection_string = self._get_connection_string()
 
             # Create SQLAlchemy engine
-            self._engine = create_engine(
+            self._connection = create_engine(
                 connection_string,
                 echo=self.config['echo'],
                 connect_args={
@@ -160,11 +151,11 @@ class Database_Engine(Engine):
             )
 
             # Test connection
-            with self._engine.connect() as connection:
+            with self._connection.connect() as connection:
                 connection.execute(text('SELECT 1'))
 
             # Create session factory
-            self._session_factory = sessionmaker(bind=self._engine)
+            self._session_factory = sessionmaker(bind=self._connection)
 
             self.logger.info(f"Connected to {self.database_type} database successfully")
 
@@ -191,7 +182,7 @@ class Database_Engine(Engine):
         Raises:
             DatabaseQueryError: If query execution fails
         """
-        if not self._engine:
+        if not self._connection:
             raise DatabaseConnectionError("Not connected. Call setup() first.")
 
         try:
@@ -250,12 +241,12 @@ class Database_Engine(Engine):
 
     def disconnect(self):
         """Close database connection."""
-        if self._engine:
-            self._engine.dispose()
+        if self._connection:
+            self._connection.dispose()
             self.logger.info("Database connection closed.")
 
         # Reset state
-        self._engine = None
+        self._connection = None
         self._session_factory = None
 
     def __del__(self):
