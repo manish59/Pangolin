@@ -18,12 +18,11 @@ class Engine(ABC):
             "logging_enabled": PangolinConfig.LOGGING_ENABLED,
             "connection_retries": PangolinConfig.CONNECTION_RETRIES,
         }
-        self.config.update(config)
 
         # Logging setup
         self.logger = logging.getLogger(f"{self.__class__.__name__}")
         self.logger.setLevel(
-            logging.DEBUG if self.config["logging_enabled"] else logging.ERROR
+            logging.INFO if self.config["logging_enabled"] else logging.ERROR
         )
 
         # Connection and query state

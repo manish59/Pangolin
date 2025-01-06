@@ -2,11 +2,13 @@ import logging
 from typing import Any, List, Dict, Optional, Union
 
 import sqlalchemy
+import oracledb
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
 from pangolin.exceptions import DatabaseConnectionError, DatabaseQueryError
 from pangolin.engine import Engine
+
 
 class Database_Engine(Engine):
     """
@@ -21,14 +23,14 @@ class Database_Engine(Engine):
     """
 
     def __init__(
-            self,
-            database_type: str,
-            database: str,
-            host: Optional[str] = None,
-            port: Optional[int] = None,
-            username: Optional[str] = None,
-            password: Optional[str] = None,
-            **config
+        self,
+        database_type: str,
+        database: str,
+        host: Optional[str] = None,
+        port: Optional[int] = None,
+        username: Optional[str] = None,
+        password: Optional[str] = None,
+        **config,
     ):
         """
         Initialize database engine with connection parameters.
@@ -43,14 +45,8 @@ class Database_Engine(Engine):
             **config: Additional configuration options
         """
         # Default configuration
-        self.config = {
-            "timeout": 10,
-            "logging_enabled": True,
-            "connection_retries": 3,
-            "echo": False
-        }
+        super().__init__(**config)
         self.config.update(config)
-
         # Logging setup
         self.logger = logging.getLogger(f"{self.__class__.__name__}")
 
@@ -76,11 +72,11 @@ class Database_Engine(Engine):
         """
         # Connection string generators for different databases
         connection_strings = {
-            'sqlite': self._get_sqlite_connection_string,
-            'postgresql': self._get_postgresql_connection_string,
-            'mysql': self._get_mysql_connection_string,
-            'oracle': self._get_oracle_connection_string,
-            'mssql': self._get_mssql_connection_string
+            "sqlite": self._get_sqlite_connection_string,
+            "postgresql": self._get_postgresql_connection_string,
+            "mysql": self._get_mysql_connection_string,
+            "oracle": self._get_oracle_connection_string,
+            "mssql": self._get_mssql_connection_string,
         }
 
         # Get and validate connection string generator
@@ -91,7 +87,7 @@ class Database_Engine(Engine):
 
     def _get_sqlite_connection_string(self) -> str:
         """Generate SQLite connection string."""
-        return f'sqlite:///{self.database}'
+        return f"sqlite:///{self.database}"
 
     def _get_postgresql_connection_string(self) -> str:
         """Generate PostgreSQL connection string."""
@@ -100,7 +96,7 @@ class Database_Engine(Engine):
 
         port = self.port or 5432
         password_part = f":{self.password}" if self.password else ""
-        return f'postgresql://{self.username}{password_part}@{self.host}:{port}/{self.database}'
+        return f"postgresql://{self.username}{password_part}@{self.host}:{port}/{self.database}"
 
     def _get_mysql_connection_string(self) -> str:
         """Generate MySQL connection string."""
@@ -109,7 +105,7 @@ class Database_Engine(Engine):
 
         port = self.port or 3306
         password_part = f":{self.password}" if self.password else ""
-        return f'mysql+pymysql://{self.username}{password_part}@{self.host}:{port}/{self.database}'
+        return f"mysql+pymysql://{self.username}{password_part}@{self.host}:{port}/{self.database}"
 
     def _get_oracle_connection_string(self) -> str:
         """Generate Oracle connection string."""
@@ -118,8 +114,8 @@ class Database_Engine(Engine):
 
         port = self.port or 1521
         password_part = f":{self.password}" if self.password else ""
-        dsn = f'{self.host}:{port}/{self.database}'
-        return f'oracle+cx_oracle://{self.username}{password_part}@{dsn}'
+        dsn = f"{self.host}:{port}/{self.database}"
+        return f"oracle+oracledb://{self.username}{password_part}@{dsn}"
 
     def _get_mssql_connection_string(self) -> str:
         """Generate Microsoft SQL Server connection string."""
@@ -128,7 +124,7 @@ class Database_Engine(Engine):
 
         port = self.port or 1433
         password_part = f":{self.password}" if self.password else ""
-        return f'mssql+pyodbc://{self.username}{password_part}@{self.host}:{port}/{self.database}?driver=ODBC+Driver+17+for+SQL+Server'
+        return f"mssql+pyodbc://{self.username}{password_part}@{self.host}:{port}/{self.database}?driver=ODBC+Driver+17+for+SQL+Server"
 
     def setup(self):
         """
@@ -139,20 +135,23 @@ class Database_Engine(Engine):
         """
         try:
             # Get connection string
+            connect_args = {}
             connection_string = self._get_connection_string()
-
+            if "tcp_connect_timeout" in self.config:
+                connect_args = {
+                    "tcp_connect_timeout": self.config["tcp_connect_timeout"],
+                }
+            elif "timeout" in self.config:
+                connect_args = {"connect_timeout": self.config["timeout"]}
+            print(connect_args)
             # Create SQLAlchemy engine
             self._connection = create_engine(
-                connection_string,
-                echo=self.config['echo'],
-                connect_args={
-                    'connect_timeout': self.config['timeout']
-                }
+                connection_string, echo=self.config["echo"], connect_args=connect_args
             )
 
             # Test connection
             with self._connection.connect() as connection:
-                connection.execute(text('SELECT 1'))
+                connection.execute(text("SELECT 1"))
 
             # Create session factory
             self._session_factory = sessionmaker(bind=self._connection)
@@ -165,9 +164,7 @@ class Database_Engine(Engine):
             raise DatabaseConnectionError(f"Failed to connect to database: {e}")
 
     def execute(
-            self,
-            query: str,
-            params: Optional[Dict[str, Any]] = None
+        self, query: str, params: Optional[Dict[str, Any]] = None
     ) -> List[Dict[str, Any]]:
         """
         Execute a database query.
@@ -252,3 +249,34 @@ class Database_Engine(Engine):
     def __del__(self):
         """Ensure connection is closed when object is deleted."""
         self.disconnect()
+
+
+if __name__ == "__main__":
+    a = Database_Engine(
+        database_type="postgresql",
+        database="pangolin",
+        host="jarvis.local",
+        username="pangolin",
+        password="pangolin",
+        echo=True,
+    )
+    a.setup()
+    a = Database_Engine(
+        database_type="mysql",
+        database="pangolin",
+        host="jarvis.local",
+        username="pangolin",
+        password="pangolin",
+        echo=True,
+    )
+    a.setup()
+    a = Database_Engine(
+        database_type="oracle",
+        database="pangolin",
+        host="jarvis.local",
+        username="PANGOLIN_PDB",
+        password="pangolin123",
+        echo=True,
+        tcp_connect_timeout=5,
+    )
+    a.setup()
