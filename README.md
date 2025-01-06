@@ -143,6 +143,7 @@ Distributed under the Apache License, Version 2.0. See `LICENSE` for more inform
 Manish Kumar Bobbili
 - GitHub: [@manish59](https://github.com/manish59)
 - Project Link: [https://github.com/manish59/Pangolin](https://github.com/manish59/Pangolin)
+- Personal website: www.manishbobbili.com
 
 ## 🙏 Acknowledgements
 - [SQLAlchemy](https://www.sqlalchemy.org/)
