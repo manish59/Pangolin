@@ -2,8 +2,8 @@ import paramiko
 import logging
 import time
 from typing import Optional, Tuple
-from pangolin.engine import Engine
-from pangolin.exceptions import SSHConnectionError, SSHExecutionError
+from pangolin_sdk.engine import Engine
+from pangolin_sdk.exceptions import SSHConnectionError, SSHExecutionError
 
 
 class SSH_Engine(Engine):

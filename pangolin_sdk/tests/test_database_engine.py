@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import Mock, patch
 from sqlalchemy.exc import SQLAlchemyError
-from pangolin.exceptions import DatabaseConnectionError, DatabaseQueryError
-from pangolin.database_engine import Database_Engine
+from pangolin_sdk.exceptions import DatabaseConnectionError, DatabaseQueryError
+from pangolin_sdk.database_engine import Database_Engine
 
 
 class TestDatabaseEngine(unittest.TestCase):

@@ -6,8 +6,8 @@ import oracledb
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
-from pangolin.exceptions import DatabaseConnectionError, DatabaseQueryError
-from pangolin.engine import Engine
+from pangolin_sdk.exceptions import DatabaseConnectionError, DatabaseQueryError
+from pangolin_sdk.engine import Engine
 
 
 class Database_Engine(Engine):

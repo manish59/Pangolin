@@ -1,5 +1,5 @@
 from marshmallow import Schema, fields, post_load
-from pangolin.ssh_engine import SSH_Engine
+from pangolin_sdk.ssh_engine import SSH_Engine
 
 
 class EngineConfigSchema(Schema):

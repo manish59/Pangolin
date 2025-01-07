@@ -65,3 +65,4 @@ pytest.xml
 *.swp
 *.swo
 *.swn
+.DS_Store

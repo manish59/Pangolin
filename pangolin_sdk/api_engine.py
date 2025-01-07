@@ -5,9 +5,9 @@ from typing import Any, Dict, Optional, Union
 from requests.auth import HTTPBasicAuth, HTTPDigestAuth
 from urllib.parse import urljoin
 
-from pangolin.config import PangolinConfig
-from pangolin.exceptions import APIConnectionError, APIExecutionError
-from pangolin.engine import Engine
+from pangolin_sdk.config import PangolinConfig
+from pangolin_sdk.exceptions import APIConnectionError, APIExecutionError
+from pangolin_sdk.engine import Engine
 
 
 class API_Engine(Engine):

@@ -1,6 +1,6 @@
 import logging
 from abc import ABC, abstractmethod
-from pangolin.config import PangolinConfig
+from pangolin_sdk.config import PangolinConfig
 
 
 class Engine(ABC):

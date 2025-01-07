@@ -1,43 +1,85 @@
 [tool.poetry]
 name = "pangolin_sdk"
-version = "0.1.0"
-description = "Pangolin - A Python-based SDK"
-authors = ["Manish Bobbili <manishbobbili@github.com>"]
-license = "MIT"
+version = "1.0.0"
+description = "A versatile Python SDK designed to simplify interactions with various systems and services, providing a unified, extensible interface for database operations, API connections, and SSH operations."
+authors = ["Manish Kumar Bobbili <manishbobbili@github.com>"]
+license = "Apache-2.0"
 readme = "README.md"
-packages = [{include = "pangolin_sdk"}]
+homepage = "https://www.manishbobbili.com"
 repository = "https://github.com/manish59/Pangolin"
-keywords = ["sdk", "api", "client", "pangolin", "pangolin_sdk"]
+documentation = "https://github.com/manish59/Pangolin/blob/main/README.md"
+keywords = ["sdk", "database", "api", "ssh", "automation", "oracle", "postgresql", "mysql", "sqlserver", "sqlite"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Database",
+    "Topic :: System :: Systems Administration",
+]
+packages = [{include = "pangolin_sdk"}]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-requests = "^2.31.0"
-pydantic = "^2.5.0"
-urllib3 = "^2.0.0"
-typing-extensions = "^4.8.0"
-pandas = "^2.2.0"
-numpy = "^1.26.0"
-tqdm = "^4.66.0"
-python-dotenv = "^1.0.0"
+# Database Dependencies
+SQLAlchemy = ">=2.0.0"
+cx-Oracle = ">=8.0.0"
+oracledb = ">=2.0.0"
+psycopg2-binary = ">=2.9.0"
+PyMySQL = ">=1.1.1"  # Allow any version to resolve compatibility issues
+
+# HTTP/API Dependencies
+requests = ">=2.0.0"
+urllib3 = ">=1.26.0"
+
+# SSH/Security Dependencies
+paramiko = ">=3.0.0"
+bcrypt = ">=4.0.0"
+cryptography = ">=40.0.0"
+
+# Core Dependencies
+typing-extensions = ">=4.0.0"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^7.4.0"
-pytest-cov = "^4.1.0"
-black = "^23.9.1"
-isort = "^5.12.0"
-mypy = "^1.5.1"
-ruff = "^0.0.291"
-pre-commit = "^3.4.0"
-sphinx = "^7.2.0"
-sphinx-rtd-theme = "^1.3.0"
+# Testing
+pytest = ">=7.0.0"
+pytest-cov = ">=4.0.0"
+
+# Code Quality
+black = ">=24.1.0"
+mypy = ">=1.0.0"
+ruff = ">=0.0.290"
+isort = ">=5.12.0"
+
+# Documentation
+sphinx = ">=7.0.0"
+sphinx-rtd-theme = ">=1.0.0"
+
+# Build/Deploy
+twine = ">=6.0.0"
+build = ">=1.0.0"
+poetry = ">=2.0.0"
+poetry-core = ">=2.0.0"
 
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/manish59/Pangolin/issues"
+
+[tool.poetry.scripts]
+pangolin = "pangolin_sdk.cli:main"
 
 [tool.black]
 line-length = 88
-target-version = ["py38"]
+target-version = ["py38", "py39", "py310", "py311"]
 include = '\.pyi?$'
 
 [tool.isort]
