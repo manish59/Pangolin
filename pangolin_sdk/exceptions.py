@@ -9,7 +9,8 @@ class ConnectionError(BaseException):
 
     message: str
     details: Dict[str, Any] = field(default_factory=dict)
-    timestamp: datetime.datetime = field(default_factory=datetime.datetime.utcnow)
+    timestamp: datetime.datetime = field(
+        default_factory=datetime.datetime.utcnow)
 
     def __str__(self):
         return f"{self.message} (Details: {self.details}, Timestamp: {self.timestamp})"

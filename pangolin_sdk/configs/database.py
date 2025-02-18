@@ -38,7 +38,8 @@ class DatabaseConnectionConfig(ConnectionConfig):
                     )
             if self.database_type == DatabaseType.POSTGRESQL:
                 if "tcp_connect_timeout" in self.options:
-                    self.options["timeout"] = self.options.pop("tcp_connect_timeout")
+                    self.options["timeout"] = self.options.pop(
+                        "tcp_connect_timeout")
                 required_params = [
                     self.host,
                     self.port,

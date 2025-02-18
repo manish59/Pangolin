@@ -84,7 +84,8 @@ class SSHConnectionConfig(ConnectionConfig):
             # SSH Agent does not require password or key to be explicitly set
 
         else:
-            raise ValueError(f"Unsupported authentication method: {self.auth_method}")
+            raise ValueError(
+                f"Unsupported authentication method: {self.auth_method}")
 
     def load_pkey_using_file(self):
         """

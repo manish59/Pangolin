@@ -53,7 +53,8 @@ class DatabaseConnection(BaseConnection[Tuple[Any, Any]]):
 
         # Get and validate connection string generator
         if self.config.database_type.value not in connection_strings:
-            raise ValueError(f"Unsupported database type: {self.config.database_type}")
+            raise ValueError(
+                f"Unsupported database type: {self.config.database_type}")
 
         return connection_strings[self.config.database_type.value]()
 
@@ -64,7 +65,8 @@ class DatabaseConnection(BaseConnection[Tuple[Any, Any]]):
     def _get_postgresql_connection_string(self) -> str:
         """Generate PostgreSQL connection string."""
         if not all([self.config.host, self.config.username, self.config.database]):
-            raise ValueError("PostgreSQL requires host, username, and database")
+            raise ValueError(
+                "PostgreSQL requires host, username, and database")
 
         port = self.config.port or 5432
         password_part = f":{self.config.password}" if self.config.password else ""
@@ -115,7 +117,8 @@ class DatabaseConnection(BaseConnection[Tuple[Any, Any]]):
                     "tcp_connect_timeout": self.config.options["tcp_connect_timeout"],
                 }
             elif "timeout" in self.config.options:
-                connect_args = {"connect_timeout": self.config.options["timeout"]}
+                connect_args = {
+                    "connect_timeout": self.config.options["timeout"]}
             # Create SQLAlchemy engine
             self._engine = create_engine(
                 connection_string,
@@ -175,7 +178,8 @@ class DatabaseConnection(BaseConnection[Tuple[Any, Any]]):
                 return rows_as_ordered_dicts
             else:
                 # Log success for commands that do not return rows
-                self._logger.info("Query executed successfully, no rows returned.")
+                self._logger.info(
+                    "Query executed successfully, no rows returned.")
                 return []
         except Exception as e:
             raise DatabaseQueryError(

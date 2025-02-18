@@ -82,7 +82,8 @@ class AWSConnection(BaseConnection[BaseClient]):
 
             # Optionally create service resource
             try:
-                self._resource = session.resource(self.config.service.value, **kwargs)
+                self._resource = session.resource(
+                    self.config.service.value, **kwargs)
             except Exception:
                 # Not all services have resource interface
                 self._resource = None

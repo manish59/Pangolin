@@ -87,7 +87,8 @@ class APIConfig(ConnectionConfig):
                 raise AuthError("JWT token required for JWT authentication")
             try:
                 # Verify JWT format without validating signature
-                jwt.decode(self.auth_token, options={"verify_signature": False})
+                jwt.decode(self.auth_token, options={
+                           "verify_signature": False})
             except jwt.InvalidTokenError:
                 raise AuthError("Invalid JWT token format")
 
@@ -103,7 +104,8 @@ class APIConfig(ConnectionConfig):
 
         elif self.auth_method == AuthMethod.HMAC:
             if not (self.hmac_key and self.hmac_secret):
-                raise AuthError("Key and secret required for HMAC authentication")
+                raise AuthError(
+                    "Key and secret required for HMAC authentication")
 
     def get_auth_headers(self, request_data: Optional[Dict] = None) -> Dict[str, str]:
         """
@@ -164,7 +166,8 @@ class APIConfig(ConnectionConfig):
                     }
                 )
             else:
-                raise AuthError("Request data required for HMAC authentication")
+                raise AuthError(
+                    "Request data required for HMAC authentication")
 
         elif self.auth_method == AuthMethod.DIGEST:
             pass
@@ -178,14 +181,16 @@ class APIConfig(ConnectionConfig):
                 name="Content-Type",
                 requirement=HeaderRequirement.REQUIRED,
                 default_value="application/json",
-                allowed_values=["application/json", "application/xml", "text/plain"],
+                allowed_values=["application/json",
+                                "application/xml", "text/plain"],
                 description="The content type of the request body",
             ),
             HeaderDefinition(
                 name="Accept",
                 requirement=HeaderRequirement.REQUIRED,
                 default_value="application/json",
-                allowed_values=["application/json", "application/xml", "text/plain"],
+                allowed_values=["application/json",
+                                "application/xml", "text/plain"],
                 description="The expected response content type",
             ),
             HeaderDefinition(

@@ -51,7 +51,8 @@ class AWSConnectionConfig(ConnectionConfig):
 
         elif self.auth_method == AWSAuthMethod.PROFILE:
             if not self.profile_name:
-                raise ValueError("profile_name is required for PROFILE authentication")
+                raise ValueError(
+                    "profile_name is required for PROFILE authentication")
 
         elif self.auth_method == AWSAuthMethod.WEB_IDENTITY:
             if not (self.role_arn and self.web_identity_token_file):
