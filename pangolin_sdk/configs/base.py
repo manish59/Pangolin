@@ -1,4 +1,7 @@
-from dataclasses import dataclass, field, asdict
+"""
+This module contains base configuration classes for connections.
+"""
+from dataclasses import asdict, dataclass, field
 from typing import Optional
 
 

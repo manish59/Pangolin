@@ -1,12 +1,14 @@
 """Simple Database Connection Implementation for Pangolin SDK."""
 
+from datetime import datetime
+from typing import Any, Dict
+
 import requests
 from requests.auth import HTTPDigestAuth
-from typing import Dict, Any
-from datetime import datetime
-from requests.exceptions import RequestException, ConnectionError, Timeout
-from pangolin_sdk.connections.base import BaseConnection
+from requests.exceptions import ConnectionError, RequestException, Timeout
+
 from pangolin_sdk.configs.api import APIConfig, AuthMethod
+from pangolin_sdk.connections.base import BaseConnection
 from pangolin_sdk.exceptions import APIConnectionError
 
 

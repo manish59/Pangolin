@@ -1,14 +1,20 @@
+
+import io
+import os
 from dataclasses import dataclass, field
 from typing import Optional
+
 import paramiko
-import os
-import io
-from pangolin_sdk.constants import SSHAuthMethod, ParamikoKey
+
 from pangolin_sdk.configs.base import ConnectionConfig
+from pangolin_sdk.constants import ParamikoKey, SSHAuthMethod
 
 
 @dataclass
 class ParamikoSSHKeyTypes:
+    """
+        Different Key Types supported by Paramiko
+    """
     key_classes = {
         "RSA": paramiko.RSAKey,
         "DSS": paramiko.DSSKey,
@@ -16,15 +22,19 @@ class ParamikoSSHKeyTypes:
         "ED25519": paramiko.Ed25519Key,
     }
 
-    def get_key(self, key_type: ParamikoKey) -> paramiko.PKey:
-        """
-        Returns the corresponding key class based on the provided key type.
+    def get_key(self, key_type: ParamikoKey):
+        """Returns the corresponding key class based on the provided key type.
+
+        Args:
+          key_type: ParamikoKey: 
+
+        Returns:
+
         """
         key_class = self.key_classes.get(key_type)
         if key_class:
             return key_class()
-        else:
-            raise ValueError(f"Unsupported key type: {key_type}")
+        raise ValueError(f"Unsupported key type: {key_type}")
 
 
 @dataclass(kw_only=True)
@@ -88,21 +98,23 @@ class SSHConnectionConfig(ConnectionConfig):
                 f"Unsupported authentication method: {self.auth_method}")
 
     def load_pkey_using_file(self):
-        """
-        Loads the private key either from the filename or directly if pkey is provided.
+        """Loads the private key either from the filename or directly if pkey is provided.
         :return: Loaded private key or None if the key cannot be loaded.
+
+        Args:
+
+        Returns:
+
         """
         if self.pkey:
-            print("Using provided pkey object.")
-            return self.pkey
-
+            return
         if self.key_filename:
             if not os.path.exists(self.key_filename):
                 raise ValueError(
                     f"Private key file {self.key_filename} does not exist."
                 )
             try:
-                key_class = ParamikoSSHKeyTypes().get_key(self.key_type)
+                key_class = ParamikoSSHKeyTypes().get_key(self.pkey_type)
                 self.private_key = key_class.from_private_key_file(
                     self.key_filename, password=self.passphrase
                 )
@@ -112,12 +124,15 @@ class SSHConnectionConfig(ConnectionConfig):
         raise ValueError("No private key provided via key_filename or pkey.")
 
     def load_encrypted_private_key(self) -> None:
-        """
-        Load an encrypted private key from a string and return a Paramiko key object.
+        """Load an encrypted private key from a string and return a Paramiko key object.
 
-        :param encrypted_key_str: The encrypted private key as a string
-        :param passphrase: The passphrase used to decrypt the key
-        :return: A paramiko.RSAKey or another key object
+        Args:
+          encrypted_key_str: The encrypted private key as a string
+          passphrase: The passphrase used to decrypt the key
+
+        Returns:
+          A paramiko.RSAKey or another key object
+
         """
         # Convert the encrypted private key string to a file-like object
         key_file = io.StringIO(self.encrypted_key_str)

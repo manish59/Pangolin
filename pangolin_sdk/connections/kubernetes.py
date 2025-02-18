@@ -1,15 +1,13 @@
 from typing import Any, Dict, Optional, Union
+
 from kubernetes import client, config
 from kubernetes.client import ApiClient
 from kubernetes.config import ConfigException
 
-from pangolin_sdk.connections.base import BaseConnection
 from pangolin_sdk.configs.kubernetes import KubernetesConnectionConfig
-from pangolin_sdk.constants import (
-    KubernetesAuthMethod,
-    ConnectionStatus,
-    KubernetesResourceType,
-)
+from pangolin_sdk.connections.base import BaseConnection
+from pangolin_sdk.constants import (ConnectionStatus, KubernetesAuthMethod,
+                                    KubernetesResourceType)
 from pangolin_sdk.exceptions import ConnectionError, ExecutionError
 
 

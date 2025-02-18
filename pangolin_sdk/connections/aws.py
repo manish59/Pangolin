@@ -1,11 +1,12 @@
 from typing import Any, Dict, Optional
+
 import boto3
 from botocore.client import BaseClient
 from botocore.exceptions import BotoCoreError, ClientError
 
-from pangolin_sdk.connections.base import BaseConnection
 from pangolin_sdk.configs.aws import AWSConnectionConfig
-from pangolin_sdk.constants import AWSAuthMethod, ConnectionStatus, AWSService
+from pangolin_sdk.connections.base import BaseConnection
+from pangolin_sdk.constants import AWSAuthMethod, AWSService, ConnectionStatus
 from pangolin_sdk.exceptions import ConnectionError, ExecutionError
 
 

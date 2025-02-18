@@ -1,13 +1,15 @@
-from dataclasses import dataclass, field
-from typing import Optional, Dict, List
 import base64
-import hmac
 import hashlib
+import hmac
 import time
+from dataclasses import dataclass, field
+from typing import Dict, List, Optional
+
 import jwt
+
 from pangolin_sdk.configs.base import ConnectionConfig
-from pangolin_sdk.exceptions import AuthError
 from pangolin_sdk.constants import AuthMethod, HeaderRequirement
+from pangolin_sdk.exceptions import AuthError
 
 
 @dataclass
@@ -58,7 +60,6 @@ class APIConfig(ConnectionConfig):
 
     def __post_init__(self):
         """Validate configuration after initialization"""
-        super().__post_init__() if hasattr(super(), "__post_init__") else None
 
         # Normalize host
         self.host = self.host.rstrip("/")
@@ -120,7 +121,7 @@ class APIConfig(ConnectionConfig):
         if self.auth_method == AuthMethod.NONE:
             return headers
 
-        elif self.auth_method == AuthMethod.BASIC:
+        if self.auth_method == AuthMethod.BASIC:
             auth_string = base64.b64encode(
                 f"{self.username}:{self.password}".encode()
             ).decode()
@@ -167,7 +168,7 @@ class APIConfig(ConnectionConfig):
                 )
             else:
                 raise AuthError(
-                    "Request data required for HMAC authentication")
+                    message="Request data required for HMAC authentication")
 
         elif self.auth_method == AuthMethod.DIGEST:
             pass

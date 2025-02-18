@@ -1,6 +1,6 @@
 import datetime
-from dataclasses import field, dataclass
-from typing import Dict, Any
+from dataclasses import dataclass, field
+from typing import Any, Dict
 
 
 @dataclass(kw_only=True)

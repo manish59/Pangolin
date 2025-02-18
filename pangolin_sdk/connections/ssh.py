@@ -1,8 +1,10 @@
 # We will implement the SSHConnection class here
-import paramiko
 from typing import Any, Tuple
+
+import paramiko
+
+from pangolin_sdk.configs.ssh import SSHAuthMethod, SSHConnectionConfig
 from pangolin_sdk.connections.base import BaseConnection, T
-from pangolin_sdk.configs.ssh import SSHConnectionConfig, SSHAuthMethod
 from pangolin_sdk.constants import ConnectionStatus
 from pangolin_sdk.exceptions import SSHConnectionError, SSHExecutionError
 
