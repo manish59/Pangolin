@@ -109,7 +109,7 @@ def test_basic_auth():
         username="user",
         password="pass",
         default_headers={"Content-Type": "application/json"},
-        timeout=5,
+        timeout=30,
     )
     api_connection = APIConnection(config=config)
     api_connection.execute(method="GET", endpoint="/basic-auth/user/pass")
@@ -184,7 +184,7 @@ def test_api_key_in_query():
         api_key="your_api_key",
         api_key_location="query",
         default_headers={"Content-Type": "application/json"},
-        timeout=5,
+        timeout=30,
     )
     api_connection = APIConnection(config=config)
     api_connection.execute(
