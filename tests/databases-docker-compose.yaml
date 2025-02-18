@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: manishbobbili
+      POSTGRES_PASSWORD: M@nish123
+      POSTGRES_DB: testing
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U manishbobbili -d testing"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: M@nish123
+      MYSQL_USER: manishbobbili
+      MYSQL_PASSWORD: M@nish123
+      MYSQL_DATABASE: testing
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "manishbobbili", "-pM@nish123"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  oracle:
+    image: container-registry.oracle.com/database/express:latest
+    container_name: oracle_db
+    environment:
+      ORACLE_PWD: M@nish123
+      ORACLE_CHARACTERSET: AL32UTF8
+      ORACLE_DATABASE: testing
+    ports:
+      - "1521:1521"
+      - "5500:5500"
+    volumes:
+      - oracle_data:/opt/oracle/oradata
+    healthcheck:
+      test: ["CMD", "sqlplus", "-L", "SYSDBA/M@nish123@//localhost:1521/testing"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # SQLite doesn't need a server, but we'll create a container with SQLite installed
+  sqlite:
+    image: alpine:latest
+    container_name: sqlite_db
+    volumes:
+      - sqlite_data:/data
+    command: |
+      sh -c "apk add --no-cache sqlite && 
+             sqlite3 /data/testing.db 'CREATE TABLE IF NOT EXISTS test (id INTEGER PRIMARY KEY);' && 
+             tail -f /dev/null"
+
+volumes:
+  postgres_data:
+  mysql_data:
+  oracle_data:
+  sqlite_data:
+
+networks:
+  default:
+    name: database_network
