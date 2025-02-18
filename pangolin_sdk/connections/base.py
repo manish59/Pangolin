@@ -11,7 +11,10 @@ from typing import Any, Dict, Generic, List, Optional, TypeVar
 
 from pangolin_sdk.configs.base import ConnectionConfig
 from pangolin_sdk.constants import ConnectionStatus
-from pangolin_sdk.exceptions import ConnectionError, ExecutionError
+from pangolin_sdk.exceptions import (
+    BaseConnectionError as ConnectionError,
+    BaseExecutionError as ExecutionError,
+)
 
 # Generic type for connection objects
 T = TypeVar("T")
@@ -46,6 +49,7 @@ class BaseConnection(ABC, Generic[T]):
         self.results: List[Any] = []
         self._last_error = None
         self._last_result = None
+        self._connection = None
 
     def _setup_logger(self, *args, **kwargs) -> logging.Logger:
         """Set up logging for the connection."""
@@ -115,8 +119,7 @@ class BaseConnection(ABC, Generic[T]):
                     self.status = ConnectionStatus.CONNECTED
                     self.metrics.last_connected_at = datetime.utcnow()
                     self.metrics.total_connections += 1
-                    connection_time = (datetime.utcnow() -
-                                       start_time).total_seconds()
+                    connection_time = (datetime.utcnow() - start_time).total_seconds()
                     self._update_avg_connection_time(connection_time)
                     self._logger.info("Connection established successfully")
                     return _connection
@@ -185,8 +188,7 @@ class BaseConnection(ABC, Generic[T]):
 
     def _calculate_retry_delay(self, retry_count: int) -> float:
         """Calculate delay for next retry attempt."""
-        delay = self.config.retry_interval * \
-            (self.config.retry_backoff**retry_count)
+        delay = self.config.retry_interval * (self.config.retry_backoff**retry_count)
         if self.config.retry_jitter:
             delay *= 0.5 + random.random()
         return delay

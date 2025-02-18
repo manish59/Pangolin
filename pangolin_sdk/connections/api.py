@@ -66,15 +66,15 @@ class APIConnection(BaseConnection):
 
             else:
                 error = APIConnectionError(
-                    message=f"Connection test failed with status {self._response.status_code}",
-                    status_code=self._response.status_code,
+                    message=f"Connection test failed with status {getattr(self._response, 'status_code', None)}",
+                    status_code=getattr(self._response, "status_code", None),
                 )
                 raise error
 
         except (RequestException, ConnectionError, Timeout) as e:
             error = APIConnectionError(
-                message=f"Connection test failed with status {self._response.status_code}",
-                status_code=self._response.status_code,
+                message=f"Connection test failed with status {e}",
+                status_code=getattr(self._response, "status_code", None),
             )
             raise error
 
@@ -106,6 +106,8 @@ class APIConnection(BaseConnection):
         headers = kwargs.get("headers")
         try:
             # Prepare request
+            if self._session is None:
+                self.connect()
             url = self.config.get_full_url(endpoint)
             # Execute request
             start_time = datetime.now()

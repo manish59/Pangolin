@@ -1,6 +1,13 @@
-from enum import Enum
+"""Enumeration definitions for various connection, authentication, and service types.
+
+This module provides comprehensive Enum classes to support different
+authentication methods, connection statuses, and service-specific configurations.
+"""
+
+from enum import Enum, unique
 
 
+@unique
 class ConnectionStatus(Enum):
     """Connection states for tracking connection lifecycle."""
 
@@ -13,6 +20,7 @@ class ConnectionStatus(Enum):
     ERROR = "error"
 
 
+@unique
 class DatabaseType(Enum):
     """Supported database types."""
 
@@ -23,8 +31,9 @@ class DatabaseType(Enum):
     SQLITE = "sqlite"
 
 
+@unique
 class HTTPVerb(Enum):
-    """HTTP verbs/methods with descriptions and specifications"""
+    """HTTP verbs/methods with descriptions and specifications."""
 
     GET = "GET"  # Retrieve a resource
     POST = "POST"  # Create a new resource
@@ -36,8 +45,9 @@ class HTTPVerb(Enum):
     TRACE = "TRACE"  # Message loop-back test
 
 
+@unique
 class AuthMethod(Enum):
-    """Supported authentication methods"""
+    """Supported authentication methods."""
 
     NONE = "none"
     BASIC = "basic"
@@ -49,32 +59,45 @@ class AuthMethod(Enum):
     HMAC = "hmac"
 
 
+@unique
 class SSHAuthMethod(Enum):
+    """Supported SSH authentication methods."""
+
     PASSWORD = "password"
     PUBLIC_KEY = "publickey"
     AGENT = "agent"
 
 
+@unique
 class HeaderRequirement(Enum):
-    """Header requirement levels"""
+    """Header requirement levels."""
 
     REQUIRED = "required"
     OPTIONAL = "optional"
     CONDITIONAL = "conditional"
 
 
+@unique
 class ParamikoKey(Enum):
+    """Supported Paramiko SSH key types."""
+
     RSA = "RSA"
     DSS = "DSS"
     ECDSA = "ECDSA"
     ED25519 = "ED25519"
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """Return the string representation of the key type.
+
+        Returns:
+            str: The value of the key type.
+        """
         return self.value
 
 
+@unique
 class KubernetesAuthMethod(Enum):
-    """Supported Kubernetes authentication methods"""
+    """Supported Kubernetes authentication methods."""
 
     NONE = "none"
     BASIC = "basic"
@@ -83,8 +106,9 @@ class KubernetesAuthMethod(Enum):
     CONFIG = "config"
 
 
+@unique
 class KubernetesResourceType(Enum):
-    """Supported Kubernetes resource types"""
+    """Supported Kubernetes resource types."""
 
     POD = "pod"
     DEPLOYMENT = "deployment"
@@ -100,8 +124,9 @@ class KubernetesResourceType(Enum):
     PERSISTENTVOLUMECLAIM = "persistentvolumeclaim"
 
 
+@unique
 class KubernetesApiVersion(Enum):
-    """Supported Kubernetes API versions"""
+    """Supported Kubernetes API versions."""
 
     V1 = "v1"
     APPS_V1 = "apps/v1"
@@ -110,8 +135,9 @@ class KubernetesApiVersion(Enum):
     STORAGE_V1 = "storage.k8s.io/v1"
 
 
+@unique
 class AWSAuthMethod(Enum):
-    """Supported AWS authentication methods"""
+    """Supported AWS authentication methods."""
 
     ACCESS_KEY = "access_key"
     PROFILE = "profile"
@@ -120,8 +146,9 @@ class AWSAuthMethod(Enum):
     SSO = "sso"
 
 
+@unique
 class AWSService(Enum):
-    """Supported AWS services"""
+    """Supported AWS services."""
 
     S3 = "s3"
     EC2 = "ec2"
@@ -137,8 +164,9 @@ class AWSService(Enum):
     ROUTE53 = "route53"
 
 
+@unique
 class AWSRegion(Enum):
-    """AWS Regions"""
+    """AWS Regions."""
 
     US_EAST_1 = "us-east-1"
     US_EAST_2 = "us-east-2"

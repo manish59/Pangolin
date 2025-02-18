@@ -15,3 +15,6 @@ def test_ssh_connection():
     connection.execute("ls -l")
     result = connection.get_last_result()
     print(result)
+
+
+test_ssh_connection()

@@ -6,9 +6,11 @@ from kubernetes.config import ConfigException
 
 from pangolin_sdk.configs.kubernetes import KubernetesConnectionConfig
 from pangolin_sdk.connections.base import BaseConnection
-from pangolin_sdk.constants import (ConnectionStatus, KubernetesAuthMethod,
-                                    KubernetesResourceType)
-from pangolin_sdk.exceptions import ConnectionError, ExecutionError
+from pangolin_sdk.constants import KubernetesAuthMethod, KubernetesResourceType
+from pangolin_sdk.exceptions import (
+    BaseConnectionError as ConnectionError,
+    BaseExecutionError as ExecutionError,
+)
 
 
 class KubernetesConnection(BaseConnection[ApiClient]):
@@ -80,8 +82,7 @@ class KubernetesConnection(BaseConnection[ApiClient]):
             self._core_api = client.CoreV1Api(self._api_client)
             self._apps_api = client.AppsV1Api(self._api_client)
             self._networking_api = client.NetworkingV1Api(self._api_client)
-            self._custom_objects_api = client.CustomObjectsApi(
-                self._api_client)
+            self._custom_objects_api = client.CustomObjectsApi(self._api_client)
 
             return self._api_client
 
@@ -118,15 +119,13 @@ class KubernetesConnection(BaseConnection[ApiClient]):
             api = self._get_api_for_resource(resource_type)
 
             # Build method name (e.g., list_namespaced_pod)
-            method_name = self._build_method_name(
-                resource_type, action, namespace)
+            method_name = self._build_method_name(resource_type, action, namespace)
 
             # Get the method
             method = getattr(api, method_name)
 
             # Build arguments
-            method_args = self._build_method_args(
-                action, namespace, name, body)
+            method_args = self._build_method_args(action, namespace, name, body)
 
             # Execute the method
             result = method(**method_args)

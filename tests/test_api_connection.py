@@ -127,7 +127,7 @@ def test_digest_auth():
         username="user",
         password="pass",
         default_headers={"Content-Type": "application/json"},
-        timeout=5,
+        timeout=30,
     )
     api_connection = APIConnection(config=config)
     api_connection.execute(method="GET", endpoint="/digest-auth/auth/user/pass")
@@ -145,7 +145,7 @@ def test_bearer_token():
         auth_method=AuthMethod.BEARER,
         auth_token="test_token",
         default_headers={"Content-Type": "application/json"},
-        timeout=5,
+        timeout=30,
     )
     api_connection = APIConnection(config=config)
     api_connection.execute(method="GET", endpoint="/bearer")
@@ -165,7 +165,7 @@ def test_api_key_in_header():
         api_key="your_api_key",
         api_key_location="header",
         default_headers={"Content-Type": "application/json"},
-        timeout=5,
+        timeout=30,
     )
     api_connection = APIConnection(config=config)
     api_connection.execute(method="GET", endpoint="/headers")

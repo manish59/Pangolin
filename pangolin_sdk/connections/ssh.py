@@ -82,8 +82,7 @@ class SSHConnection(BaseConnection[Tuple[Any, Any]]):
         try:
             command = args[0]
             self._logger.info(f"Executing command: {command}")
-            self.stdin, self.stdout, self.stderr = self._client.exec_command(
-                command)
+            self.stdin, self.stdout, self.stderr = self._client.exec_command(command)
             self.stderr = self.stderr.read().decode("utf-8")
             self.stdout = self.stdout.read().decode("utf-8")
             if self.stderr:
@@ -93,7 +92,7 @@ class SSHConnection(BaseConnection[Tuple[Any, Any]]):
                     details=self.config.get_info(),
                 )
             else:
-                self._logger.info(f"Execution performed successfully")
+                # self._logger.info(f"Execution performed successfully")
                 return self.stdout
         except Exception as e:
             error = SSHExecutionError(

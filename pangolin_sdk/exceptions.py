@@ -1,23 +1,42 @@
+"""Custom exception classes for connection, authentication, and execution errors.
+
+This module provides a comprehensive set of exception classes to handle
+various error scenarios in connection and execution contexts.
+"""
+
 import datetime
 from dataclasses import dataclass, field
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 
 @dataclass(kw_only=True)
-class ConnectionError(BaseException):
-    """Base exception for all connection-related errors."""
+class BaseConnectionError(BaseException):
+    """Base exception for all connection-related errors.
+
+    Attributes:
+        message (str): Detailed error description
+        details (dict, optional): Additional error details
+        timestamp (datetime): Timestamp of the error occurrence
+    """
 
     message: str
     details: Dict[str, Any] = field(default_factory=dict)
-    timestamp: datetime.datetime = field(
-        default_factory=datetime.datetime.utcnow)
+    timestamp: datetime.datetime = field(default_factory=datetime.datetime.utcnow)
 
-    def __str__(self):
-        return f"{self.message} (Details: {self.details}, Timestamp: {self.timestamp})"
+    def __str__(self) -> str:
+        """
+        Create a string representation of the error.
+
+        Returns:
+            str: Formatted error message with details and timestamp
+        """
+        return (
+            f"{self.message} " f"(Details: {self.details}, Timestamp: {self.timestamp})"
+        )
 
 
 @dataclass(kw_only=True)
-class DatabaseConnectionError(ConnectionError):
+class DatabaseConnectionError(BaseConnectionError):
     """
     Exception raised for database connection errors.
 
@@ -30,7 +49,7 @@ class DatabaseConnectionError(ConnectionError):
 
 
 @dataclass(kw_only=True)
-class APIConnectionError(ConnectionError):
+class APIConnectionError(BaseConnectionError):
     """
     Exception raised for API connection errors.
 
@@ -39,11 +58,11 @@ class APIConnectionError(ConnectionError):
         status_code (int, optional): HTTP status code if applicable
     """
 
-    status_code: int = None
+    status_code: Optional[int] = None
 
 
 @dataclass(kw_only=True)
-class AuthError(ConnectionError):
+class AuthError(BaseConnectionError):
     """
     Exception raised for authentication errors.
 
@@ -52,11 +71,11 @@ class AuthError(ConnectionError):
         status_code (int, optional): HTTP status code if applicable
     """
 
-    status_code: int = None
+    status_code: Optional[int] = None
 
 
 @dataclass(kw_only=True)
-class ExecutionError(ConnectionError):
+class BaseExecutionError(BaseConnectionError):
     """
     Exception raised for execution errors.
 
@@ -64,11 +83,9 @@ class ExecutionError(ConnectionError):
         message (str): Detailed error description
     """
 
-    pass
-
 
 @dataclass(kw_only=True)
-class APIExecutionError(ExecutionError):
+class APIExecutionError(BaseExecutionError):
     """
     Exception raised for API request execution errors.
 
@@ -78,12 +95,12 @@ class APIExecutionError(ExecutionError):
         response (dict, optional): Full response details
     """
 
-    status_code: int = None
+    status_code: Optional[int] = None
     response: Dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass(kw_only=True)
-class DatabaseQueryError(ExecutionError):
+class DatabaseQueryError(BaseExecutionError):
     """
     Exception raised for database query execution errors.
 
@@ -93,12 +110,12 @@ class DatabaseQueryError(ExecutionError):
         params (dict, optional): Query parameters
     """
 
-    query: str = None
+    query: Optional[str] = None
     params: Dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass(kw_only=True)
-class SSHConnectionError(ConnectionError):
+class SSHConnectionError(BaseConnectionError):
     """
     Exception raised for SSH connection errors.
 
@@ -108,12 +125,12 @@ class SSHConnectionError(ConnectionError):
         username (str, optional): Username used for connection
     """
 
-    hostname: str = None
-    username: str = None
+    hostname: Optional[str] = None
+    username: Optional[str] = None
 
 
 @dataclass(kw_only=True)
-class SSHExecutionError(ExecutionError):
+class SSHExecutionError(BaseExecutionError):
     """
     Exception raised for SSH execution errors.
 
@@ -122,7 +139,4 @@ class SSHExecutionError(ExecutionError):
         command (str, optional): The command that caused the error
     """
 
-    command: str = None
-
-
-#
+    command: Optional[str] = None
