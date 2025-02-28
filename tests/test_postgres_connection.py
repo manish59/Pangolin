@@ -4,7 +4,7 @@ from pangolin_sdk.constants import DatabaseType
 
 
 def test_postgres_connection():
-    host = "192.168.4.234"
+    host = "192.168.4.237"
     username = "manishbobbili"
     password = "M@nish123"
     database_name = "testing"

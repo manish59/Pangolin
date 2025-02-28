@@ -112,17 +112,10 @@ class DatabaseConnection(BaseConnection[Tuple[Any, Any]]):
             connect_args = {}
             self._encode_credentials()
             connection_string = self._get_connection_string()
-            if "tcp_connect_timeout" in self.config.options:
-                connect_args = {
-                    "tcp_connect_timeout": self.config.options["tcp_connect_timeout"],
-                }
-            elif "timeout" in self.config.options:
-                connect_args = {"connect_timeout": self.config.options["timeout"]}
-            # Create SQLAlchemy engine
             self._engine = create_engine(
                 connection_string,
                 echo=self.config.options["echo"],
-                connect_args=connect_args,
+                connect_args=self.config.options,
             )
             with self._engine.connect() as connection:
                 connection.execute(text("SELECT 1"))

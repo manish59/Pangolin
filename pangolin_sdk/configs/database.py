@@ -92,10 +92,12 @@ class DatabaseConnectionConfig(ConnectionConfig):
     def _handle_postgres_timeout(self) -> None:
         """Handle PostgreSQL-specific timeout configuration."""
         if (
-            self.database_type == DatabaseType.POSTGRESQL
-            and "tcp_connect_timeout" in self.options
+            self.database_type == DatabaseType.ORACLE
+            or self.database_type == DatabaseType.MSSQL
         ):
-            self.options["timeout"] = self.options.pop("tcp_connect_timeout")
+            self.options["timeout"] = self.timeout
+        else:
+            self.options["connect_timeout"] = self.timeout
 
     def _get_required_params(self) -> List[Any]:
         """Get list of required parameters for validation.
