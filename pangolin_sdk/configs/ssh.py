@@ -40,7 +40,7 @@ class ParamikoSSHKeyTypes:
         """
         key_class = self.key_classes.get(key_type.name)
         if key_class:
-            return key_class()
+            return key_class
         raise ValueError(f"Unsupported key type: {key_type}")
 
 
@@ -111,7 +111,7 @@ class SSHConnectionConfig(ConnectionConfig):
             )
 
         # Load key based on available information
-        if self.encrypted_key_str and self.passphrase and self.pkey_type:
+        if self.encrypted_key_str and self.pkey_type:
             self.load_encrypted_private_key()
         elif self.key_filename and self.pkey_type:
             self.load_pkey_using_file()

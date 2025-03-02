@@ -103,8 +103,9 @@ class SSHConnection(BaseConnection[Tuple[Any, Any]]):
             hostname=self.config.host,
             port=self.config.port,
             username=self.config.username,
-            pkey=self.config.pkey,
+            pkey=self.config.private_key,
             timeout=self.config.timeout,
+            passphrase=self.config.passphrase,
         )
 
     def _ssh_agent_authentication(self) -> None:
