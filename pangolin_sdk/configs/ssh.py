@@ -18,14 +18,12 @@ from pangolin_sdk.constants import ParamikoKey, SSHAuthMethod
 class ParamikoSSHKeyTypes:
     """Different Key Types supported by Paramiko."""
 
-    key_classes: Dict[str, Type[paramiko.PKey]] = field(
-        default_factory=lambda: {
+    key_classes={
             "RSA": paramiko.RSAKey,
             "DSS": paramiko.DSSKey,
             "ECDSA": paramiko.ECDSAKey,
             "ED25519": paramiko.Ed25519Key,
         }
-    )
 
     def get_key(self, key_type: ParamikoKey) -> paramiko.PKey:
         """
